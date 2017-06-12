@@ -45,14 +45,13 @@ sudo su lucidworks -c "chmod 600 ~/.ssh/authorized_keys "
 # e.g. something like
 # echo YourSecretPasswordHere | passwd lucidworks --stdin
 
-
 #
-# Add ulimit stuff
+# One can copy/paste the below to set ulimits for the service account named 'lucidworks'
 #
-# max file handles
+# set OS ulimit for max file handles
 sudo bash -c 'echo "lucidworks           soft    nofile          63536" >>/etc/security/limits.conf'
 sudo bash -c 'echo "lucidworks           hard    nofile          63536" >>/etc/security/limits.conf'
-# set limits for max processes
+#  set OS ulimit for max processes
 sudo bash -c 'echo "lucidworks           soft    nproc          16384" >>/etc/security/limits.conf'
 sudo bash -c 'echo "lucidworks           hard    nproc          16384" >>/etc/security/limits.conf'
 
