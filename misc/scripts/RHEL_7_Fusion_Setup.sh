@@ -1,7 +1,7 @@
 #!/bin/bash
 
 #
-# Create a fresh RHEL image in AWS, with EBS-backed storage for Fusion. Then run this script which requires sudo privileges.
+# Create a fresh RHEL image in AWS, with EBS-backed storage for Fusion. Then run this script which requires full sudo privileges.
 #
 
 #
@@ -30,8 +30,8 @@ echo export JAVA_HOME=/usr/java/latest >>~/.bash_profile
 
 # Setup JRE_HOME
 export JRE_HOME=$JAVA_HOME/jre
-export PATH=$PATH:$JAVA_HOME/bin:$JRE_HOME/bin
-echo export PATH=\$PATH:\$JAVA_HOME/bin:\$JRE_HOME/bin >>~/.bash_profile
+export PATH=$JAVA_HOME/bin:$JRE_HOME/bin:$PATH
+echo export PATH=\$JAVA_HOME/bin:\$JRE_HOME/bin:\$PATH >>~/.bash_profile
 
 #
 # Setup local user, "lucidworks"
@@ -84,3 +84,8 @@ sudo chown -R lucidworks:lucidworks $mnt
 filename=fusion-3.0.0.tar.gz
 sudo -u lucidworks wget -q https://download.lucidworks.com/$filename -O $mnt/$filename
 # TODO: check for errors, and a filesize >0, and md5 of file matches...
+
+
+# Optionally, redirect requests to port 80 to localhost:8080 where we would have Fusion App Studio (TwigKit) running
+#
+# sudo iptables -A PREROUTING -t nat -i eth0 -p tcp --dport 80 -j REDIRECT --to-port 8080
