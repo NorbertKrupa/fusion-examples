@@ -1,8 +1,12 @@
 #!/bin/bash
 
 #
-# Create a fresh RHEL image in AWS, with EBS-backed storage for Fusion. Then run this script which requires full sudo privileges.
-#
+# Take a fresh RHEL/CentOS 7 image and load it w/ Lucidworks Fusion!
+# Then run this script which requires full sudo privileges.
+# 
+# Change use_ebs_drive to 1 to use additional volumes for drive storage in AWS, which should increase performance dramatically
+# Support for other CSP's can be added later.
+use_ebs_drive=0
 
 #
 # Update local RHEL image
@@ -60,9 +64,8 @@ sudo bash -c 'echo "lucidworks           hard    nproc          16384" >>/etc/se
 
 dest=/opt/lucidworks
 sudo mkdir $dest
-use_app_drive=0
 
-if [ $use_app_drive -gt 0 ]; then
+if [ $use_ebs_drive -gt 0 ]; then
   echo "Setting up additional storage volume and mounting"
 
   #
