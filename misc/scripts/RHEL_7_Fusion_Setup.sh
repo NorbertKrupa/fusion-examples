@@ -15,13 +15,13 @@ sudo yum -y install vim
 # Install Java 8
 # Use the RPM method....
 #
-filename=jdk-8u112-linux-x64.rpm
-wget --no-cookies --no-check-certificate --header "Cookie: gpw_e24=http%3A%2F%2Fwww.oracle.com%2F; oraclelicense=accept-securebackup-cookie" "http://download.oracle.com/otn-pub/java/jdk/8u112-b15/$filename"
+JDK_URL="http://download.oracle.com/otn-pub/java/jdk/8u144-b01/090f390dda5b47b9b721c7dfaa008135/jdk-8u144-linux-x64.rpm"
+wget --no-cookies --no-check-certificate --header "Cookie: gpw_e24=http%3A%2F%2Fwww.oracle.com%2F; oraclelicense=accept-securebackup-cookie" "$JDK_URL" -O "jdk.rpm"
 if [ ! -s $filename ]; then
   echo "Could not download java, you may need to setup http_proxy and https_proxy environment variables."
   exit -1
 fi
-sudo rpm -Uvh $filename
+sudo rpm -Uvh jdk.rpm
 sudo alternatives --install /usr/bin/java java /usr/java/latest/bin/java 2
 
 # Setup JAVA_HOME
@@ -33,12 +33,15 @@ export JRE_HOME=$JAVA_HOME/jre
 export PATH=$JAVA_HOME/bin:$JRE_HOME/bin:$PATH
 echo export PATH=\$JAVA_HOME/bin:\$JRE_HOME/bin:\$PATH >>~/.bash_profile
 
+# delete downloaded JDK
+which java && java -version && rm -f jdk.rpm
+
 #
 # Setup local user, "lucidworks"
 #
 sudo adduser lucidworks
 sudo su lucidworks -c "mkdir -p ~/.ssh/"
-# Uncomment below to add a public key for the lucidworks user...
+# Add a public key for the lucidworks user...
 sudo su lucidworks -c "echo 'ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAACAQDFdl6bk6Gq3fM2cdR7yeYGcJGLCKFUtVVA6ms2gVVutzdQ95VKf/nwhglvxBstF/YZBbzSqA/h9ebEdmvk5xkHqrEl20HDt3MbatO+yW57yyTANnQEghA3Wm8BYgjTpRWY6cemk8jXFSDG4GO1eNMSaQCL8TeHkNleEH8rhODRvRLXslSAC6n6hXbrb6OrIU/MpcOdhtgZBTE+LcLf6nXEczlnS38LsDdSuCxd+N1swsbpsRYg5jodmLZ1bgBqyHdKsCjHQoo7lUrFC3jG5B9G7AZ2Wc3xBeKxS+rk1zVtLMF98SOI7Kjv2imfKrnXuxAkT7u0p7eBHosWq4W5ftb9qsEEqeL39n9Zm3DicPUXov5VQTAuRe9+pxneUQBwU55FSyqZM94P0T+FhzXBgZtiErtnFnAdHq7CslHLMM7Z16pzsykD8BS40PEvowIH3IaMTpuuIQIIwS67Qz6Dxthl6XUxKbzIBOPEzJVxH3nFC8Ue7hrJCuKfghcAt/Jav1aNX+/tTuoHwcL8cXAUoJKslRyMjxdct+GmMoRORdnViSc4rjI6ZxhQifN3PT4schugBnd4SGhooTcyvEs5UqxD4NzQFrjB7ImQoR89SmbEBqwTYnKKaLiK8cSfn1ydQbP0MJG7iKT6bv/ibfdTiZMuuB7fOdkZPxIfZ0nK6dGo1w==' >>~/.ssh/authorized_keys"
 sudo su lucidworks -c "chmod 600 ~/.ssh/authorized_keys "
 # optionally, set a password for user
@@ -55,37 +58,52 @@ sudo bash -c 'echo "lucidworks           hard    nofile          63536" >>/etc/s
 sudo bash -c 'echo "lucidworks           soft    nproc          16384" >>/etc/security/limits.conf'
 sudo bash -c 'echo "lucidworks           hard    nproc          16384" >>/etc/security/limits.conf'
 
-# Optionally .... Use separate storage volumes, format & mount...
-#
-# Setup EBS volume
-#
-lsblk
-# for now, hard code the device name
-device=/dev/xvdb
-sudo file -s $device
+dest=/opt/lucidworks
+sudo mkdir $dest
+use_app_drive=0
 
-# if the partition is already formatted, just quit
-sudo file -s $device | grep -l ": data"
-test $? -gt 0 && echo "Device is already formatted! Exiting." && exit
+if [ $use_app_drive -gt 0 ]; then
+  echo "Setting up additional storage volume and mounting"
 
-mnt=/opt/lucidworks
-sudo mkdir $mnt
-sudo mkfs -t ext4 $device && sudo mount $device $mnt 
-sudo chown -R lucidworks:lucidworks $mnt
+  #
+  # Setup EBS volume
+  #
+  lsblk
+  # for now, hard code the device name
+  device=/dev/xvdb
+  sudo file -s $device
 
-#TODO: make changes permanent in fstab
+  # if the partition is already formatted, just quit
+  sudo file -s $device | grep -l ": data"
+  test $? -gt 0 && echo "Device is already formatted! Exiting." && exit
+  if [ $? -gt 0]; then
+    echo "Device $device is already formatted! Skipping filesystem creation."
+  else
+    sudo mkfs -t ext4 $device && sudo mount $device $dest 
+    #TODO: make mount changes permanent in fstab
+  fi
 
+fi # end use_app_drive statement
+sudo chown -R lucidworks:lucidworks $dest
+# we have /opt/lucidworks ready to go
+echo "Downloading Fusion, which is free to use for up to 30 days. Preety cool, right?"
+#echo "Please be cool w/ us and throw us an email address:"
 
 #
-# LUCIDWORKS INTERNAL ONLY.,.... do not share below w/ prospects/customers. THanks.
+# TODO: Create reg. API?
 #
-# TODO: Stage and/or Setup of Fusion bits
-#
-filename=fusion-3.0.0.tar.gz
-sudo -u lucidworks wget -q https://download.lucidworks.com/$filename -O $mnt/$filename
+fusion_file=fusion-3.1.2.tar.gz
+sudo -u lucidworks wget -v https://download.lucidworks.com/fusion-3.1.2/$fusion_file -O $dest/$fusion_file
 # TODO: check for errors, and a filesize >0, and md5 of file matches...
-
 
 # Optionally, redirect requests to port 80 to localhost:8080 where we would have Fusion App Studio (TwigKit) running
 #
-# sudo iptables -A PREROUTING -t nat -i eth0 -p tcp --dport 80 -j REDIRECT --to-port 8080
+sudo iptables -A PREROUTING -t nat -i eth0 -p tcp --dport 80 -j REDIRECT --to-port 8080
+#sudo iptables -A PREROUTING -t nat -i eth0 -p tcp --dport 80 -j REDIRECT --to-port 8764
+
+cd $dest 
+sudo -u lucidworks tar xvzf $fusion_file
+sudo -u lucidworks fusion/3.1.2/bin/fusion start
+echo
+
+echo "Enjoy using Lucidworks Fusion! You can bootstrap its admin UI on port 8764 of this box."
