@@ -65,8 +65,9 @@ sudo bash -c 'echo "lucidworks           hard    nproc          16384" >>/etc/se
 dest=/opt/lucidworks
 sudo mkdir $dest
 
+# if use drive is > 0
 if [ $use_ebs_drive -gt 0 ]; then
-  echo "Setting up additional storage volume and mounting"
+  echo "Setting up additional EBS storage volume and mounting"
 
   #
   # Setup EBS volume
@@ -93,15 +94,17 @@ echo "Downloading Fusion, which is free to use for up to 30 days. Preety cool, r
 #echo "Please be cool w/ us and throw us an email address:"
 
 #
-# TODO: Create reg. API?
+# TODO: Create reg. API call?
 #
+
 fusion_file=fusion-3.1.2.tar.gz
 sudo -u lucidworks wget -v https://download.lucidworks.com/fusion-3.1.2/$fusion_file -O $dest/$fusion_file
 # TODO: check for errors, and a filesize >0, and md5 of file matches...
 
+#TODO
 # Optionally, redirect requests to port 80 to localhost:8080 where we would have Fusion App Studio (TwigKit) running
 #
-sudo iptables -A PREROUTING -t nat -i eth0 -p tcp --dport 80 -j REDIRECT --to-port 8080
+#sudo iptables -A PREROUTING -t nat -i eth0 -p tcp --dport 80 -j REDIRECT --to-port 8080
 #sudo iptables -A PREROUTING -t nat -i eth0 -p tcp --dport 80 -j REDIRECT --to-port 8764
 
 cd $dest 
