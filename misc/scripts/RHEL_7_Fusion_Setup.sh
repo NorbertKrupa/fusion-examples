@@ -1,10 +1,10 @@
 #!/bin/bash
 
 #
-# Take a fresh RHEL/CentOS 7 image and load it w/ Lucidworks Fusion!
-# Then run this script which requires full sudo privileges.
+# Take a fresh RHEL/CentOS 7 image and get it running Lucidworks Fusion!
+# This script will update linux, install Java, create a service account, and get Fusion ready to bootstrap. It also requires full sudo privileges.
 # 
-# Change use_ebs_drive to 1 to use additional volumes for drive storage in AWS, which should increase performance dramatically
+# Using AWS? We sugget EBS. Change use_ebs_drive to 1 to use additional volumes for drive storage in AWS, which should increase performance dramatically
 # Support for other CSP's can be added later.
 use_ebs_drive=0
 
@@ -53,12 +53,12 @@ sudo su lucidworks -c "chmod 600 ~/.ssh/authorized_keys "
 # echo YourSecretPasswordHere | passwd lucidworks --stdin
 
 #
-# One can copy/paste the below to set ulimits for the service account named 'lucidworks'
+# Tweak kernel parameters. I.e., set ulimits for the service account named 'lucidworks'
 #
 # set OS ulimit for max file handles
 sudo bash -c 'echo "lucidworks           soft    nofile          63536" >>/etc/security/limits.conf'
 sudo bash -c 'echo "lucidworks           hard    nofile          63536" >>/etc/security/limits.conf'
-#  set OS ulimit for max processes
+#  set OS ulimit for max processes(threads)
 sudo bash -c 'echo "lucidworks           soft    nproc          16384" >>/etc/security/limits.conf'
 sudo bash -c 'echo "lucidworks           hard    nproc          16384" >>/etc/security/limits.conf'
 
@@ -91,7 +91,6 @@ fi # end use_app_drive statement
 sudo chown -R lucidworks:lucidworks $dest
 # we have /opt/lucidworks ready to go
 echo "Downloading Fusion, which is free to use for up to 30 days. Preety cool, right?"
-#echo "Please be cool w/ us and throw us an email address:"
 
 #
 # TODO: Create reg. API call?
