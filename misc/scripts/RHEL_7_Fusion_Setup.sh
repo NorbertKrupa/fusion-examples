@@ -19,7 +19,7 @@ sudo yum -y install vim
 # Install Java 8
 # Use the RPM method....
 #
-JDK_URL="http://download.oracle.com/otn-pub/java/jdk/8u144-b01/090f390dda5b47b9b721c7dfaa008135/jdk-8u144-linux-x64.rpm"
+JDK_URL="http://download.oracle.com/otn-pub/java/jdk/8u151-b12/e758a0de34e24606bca991d704f6dcbf/jdk-8u151-linux-x64.rpm"
 wget --no-cookies --no-check-certificate --header "Cookie: gpw_e24=http%3A%2F%2Fwww.oracle.com%2F; oraclelicense=accept-securebackup-cookie" "$JDK_URL" -O "jdk.rpm"
 if [ ! -s $filename ]; then
   echo "Could not download java, you may need to setup http_proxy and https_proxy environment variables."
@@ -111,4 +111,5 @@ sudo -u lucidworks tar xvzf $fusion_file
 sudo -u lucidworks fusion/3.1.2/bin/fusion start
 echo
 
-echo "Enjoy using Lucidworks Fusion! You can bootstrap its admin UI on port 8764 of this box."
+my_external_ip=`curl -s ident.me`
+echo "Enjoy using Lucidworks Fusion! You can bootstrap its admin UI @ http://${my_external_ip}:8764/ of this box."
