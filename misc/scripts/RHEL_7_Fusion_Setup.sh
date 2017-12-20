@@ -54,7 +54,7 @@ sudo su lucidworks -c "echo 'cd /opt/lucidworks/fusion' >>~/.bash_profile"
 # echo YourSecretPasswordHere | passwd lucidworks --stdin
 
 #
-# Tweak kernel parameters. I.e., set ulimits for the service account named 'lucidworks'
+# Tweak kernel parameters. i.e., set ulimits for the service account named 'lucidworks'
 #
 # set OS ulimit for max file handles
 sudo bash -c 'echo "lucidworks           soft    nofile          63536" >>/etc/security/limits.conf'
@@ -97,8 +97,8 @@ echo "Downloading Fusion, which is free to use for up to 30 days. Preety cool, r
 # TODO: Create reg. API call?
 #
 
-fusion_file=fusion-3.1.2.tar.gz
-sudo -u lucidworks wget -v https://download.lucidworks.com/fusion-3.1.2/$fusion_file -O $dest/$fusion_file
+fusion_file=fusion-3.1.3.tar.gz
+sudo -u lucidworks wget -v https://download.lucidworks.com/fusion-3.1.3/$fusion_file -O $dest/$fusion_file
 # TODO: check for errors, and a filesize >0, and md5 of file matches...
 
 #TODO
@@ -113,7 +113,7 @@ sudo -u lucidworks wget -v https://download.lucidworks.com/fusion-3.1.2/$fusion_
 
 cd $dest 
 sudo -u lucidworks tar xvzf $fusion_file
-sudo -u lucidworks fusion/latest/bin/fusion start
+sudo -u lucidworks fusion/bin/fusion start
 echo
 
 my_external_ip=`curl -s ident.me`
