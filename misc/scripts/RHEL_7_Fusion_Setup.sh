@@ -48,6 +48,7 @@ sudo su lucidworks -c "mkdir -p ~/.ssh/"
 # Add a public key for the lucidworks user...
 sudo su lucidworks -c "echo 'ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAACAQDFdl6bk6Gq3fM2cdR7yeYGcJGLCKFUtVVA6ms2gVVutzdQ95VKf/nwhglvxBstF/YZBbzSqA/h9ebEdmvk5xkHqrEl20HDt3MbatO+yW57yyTANnQEghA3Wm8BYgjTpRWY6cemk8jXFSDG4GO1eNMSaQCL8TeHkNleEH8rhODRvRLXslSAC6n6hXbrb6OrIU/MpcOdhtgZBTE+LcLf6nXEczlnS38LsDdSuCxd+N1swsbpsRYg5jodmLZ1bgBqyHdKsCjHQoo7lUrFC3jG5B9G7AZ2Wc3xBeKxS+rk1zVtLMF98SOI7Kjv2imfKrnXuxAkT7u0p7eBHosWq4W5ftb9qsEEqeL39n9Zm3DicPUXov5VQTAuRe9+pxneUQBwU55FSyqZM94P0T+FhzXBgZtiErtnFnAdHq7CslHLMM7Z16pzsykD8BS40PEvowIH3IaMTpuuIQIIwS67Qz6Dxthl6XUxKbzIBOPEzJVxH3nFC8Ue7hrJCuKfghcAt/Jav1aNX+/tTuoHwcL8cXAUoJKslRyMjxdct+GmMoRORdnViSc4rjI6ZxhQifN3PT4schugBnd4SGhooTcyvEs5UqxD4NzQFrjB7ImQoR89SmbEBqwTYnKKaLiK8cSfn1ydQbP0MJG7iKT6bv/ibfdTiZMuuB7fOdkZPxIfZ0nK6dGo1w==' >>~/.ssh/authorized_keys"
 sudo su lucidworks -c "chmod 600 ~/.ssh/authorized_keys "
+sudo su lucidworks -c "echo 'cd /opt/lucidworks/fusion' >>~/.bash_profile"
 # optionally, set a password for user
 # e.g. something like
 # echo YourSecretPasswordHere | passwd lucidworks --stdin
@@ -112,7 +113,7 @@ sudo -u lucidworks wget -v https://download.lucidworks.com/fusion-3.1.2/$fusion_
 
 cd $dest 
 sudo -u lucidworks tar xvzf $fusion_file
-sudo -u lucidworks fusion/3.1.2/bin/fusion start
+sudo -u lucidworks fusion/latest/bin/fusion start
 echo
 
 my_external_ip=`curl -s ident.me`
