@@ -19,7 +19,8 @@ sudo yum -y install vim
 # Install Java 8
 # Use the RPM method....
 #
-JDK_URL="http://download.oracle.com/otn-pub/java/jdk/8u151-b12/e758a0de34e24606bca991d704f6dcbf/jdk-8u151-linux-x64.rpm"
+#JDK_URL="http://download.oracle.com/otn-pub/java/jdk/8u151-b12/e758a0de34e24606bca991d704f6dcbf/jdk-8u151-linux-x64.rpm"
+JDK_URL="http://download.oracle.com/otn-pub/java/jdk/8u161-b12/2f38c3b165be4555a1fa6e98c45e0808/jdk-8u161-linux-x64.rpm"
 wget --no-cookies --no-check-certificate --header "Cookie: gpw_e24=http%3A%2F%2Fwww.oracle.com%2F; oraclelicense=accept-securebackup-cookie" "$JDK_URL" -O "jdk.rpm"
 if [ ! -s $filename ]; then
   echo "Could not download java, you may need to setup http_proxy and https_proxy environment variables."
@@ -97,7 +98,7 @@ echo "Downloading Fusion, which is free to use for up to 30 days. Preety cool, r
 # TODO: Create reg. API call?
 #
 
-ver=3.1.3
+ver=4.0.0
 fusion_file=fusion-$ver.tar.gz
 sudo -u lucidworks wget -v https://download.lucidworks.com/fusion-$ver/$fusion_file -O $dest/$fusion_file
 # TODO: check for errors, and a filesize >0, and md5 of file matches...
@@ -105,8 +106,7 @@ sudo -u lucidworks wget -v https://download.lucidworks.com/fusion-$ver/$fusion_f
 #TODO
 # Optionally, redirect requests to port 80 to localhost:8080 where we would have Fusion App Studio (TwigKit) running
 #
-#sudo iptables -A PREROUTING -t nat -i eth0 -p tcp --dport 80 -j REDIRECT --to-port 8080
-#sudo iptables -A PREROUTING -t nat -i eth0 -p tcp --dport 80 -j REDIRECT --to-port 8764
+sudo iptables -A PREROUTING -t nat -i eth0 -p tcp --dport 80 -j REDIRECT --to-port 8764
 
 # TODO
 # register Fusion as a service for systemctl start/stop/etc.
@@ -119,3 +119,4 @@ echo
 
 my_external_ip=`curl -s ident.me`
 echo "Enjoy using Lucidworks Fusion! You can bootstrap its admin UI @ http://${my_external_ip}:8764/ and evaluations of Fusion App Studio can be coordinated w/ your Lucidworks technical rep."
+echo "You can accses the server via SSH: ssh lucidworks@$my_external_ip"
