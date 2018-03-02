@@ -108,15 +108,19 @@ sudo -u lucidworks wget -v https://download.lucidworks.com/fusion-$ver/$fusion_f
 #
 sudo iptables -A PREROUTING -t nat -i eth0 -p tcp --dport 80 -j REDIRECT --to-port 8764
 
+my_external_ip=`curl -s ident.me`
+# TODO Further test networking ?
+echo "You can accses the server via SSH: ssh lucidworks@$my_external_ip"
+
 # TODO
 # register Fusion as a service for systemctl start/stop/etc.
 #
 
 cd $dest 
 sudo -u lucidworks tar xvzf $fusion_file
+echo Starting fusion....
 sudo -u lucidworks fusion/$ver/bin/fusion start
 echo
-
-my_external_ip=`curl -s ident.me`
-echo "Enjoy using Lucidworks Fusion! You can bootstrap its admin UI @ http://${my_external_ip}:8764/ and evaluations of Fusion App Studio can be coordinated w/ your Lucidworks technical rep."
-echo "You can accses the server via SSH: ssh lucidworks@$my_external_ip"
+echo Finished!
+echo
+echo "Enjoy using Lucidworks Fusion! You can access the UI @ http://${my_external_ip}:8764/"
