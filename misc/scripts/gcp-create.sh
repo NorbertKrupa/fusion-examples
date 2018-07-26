@@ -3,8 +3,7 @@ export instance_name=fusion-4-1-0
 export centos7ver=v20180716
 
 # Create firewall rule for Fusion Console (port 8764) (tag instances w/ 'fusion-server')
-gcloud compute --project="$GOOGLE_CLOUD_PROJECT" firewall-rules create allow-fusion --network=default --allow=tcp:8764 --source-ranges=0.0.0.0/0 --target-
-tags=fusion-server
+gcloud compute --project="$GOOGLE_CLOUD_PROJECT" firewall-rules create allow-fusion --network=default --allow=tcp:8764 --source-ranges=0.0.0.0/0 --target-tags=fusion-server
 
 gcloud compute --project "$GOOGLE_CLOUD_PROJECT" instances create "$instance_name" \
   --zone "us-central1-c" --machine-type "$instance_type" --subnet "default" \
