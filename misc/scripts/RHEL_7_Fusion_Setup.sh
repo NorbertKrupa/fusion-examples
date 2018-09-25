@@ -14,6 +14,7 @@ use_ebs_drive=0
 sudo yum -y update
 sudo yum -y install wget nc unzip
 sudo yum -y install vim
+sudo yum install iptables-services
 
 #
 # Install Java 8
@@ -106,6 +107,7 @@ sudo -u lucidworks wget -v https://download.lucidworks.com/fusion-$ver/$fusion_f
 # Optionally, redirect requests to port 80 to localhost:8080 where we would have Fusion App Studio (TwigKit) running
 #
 sudo iptables -A PREROUTING -t nat -i eth0 -p tcp --dport 80 -j REDIRECT --to-port 8764
+sudo service iptables save
 
 my_external_ip=`curl -s ident.me`
 # TODO Further test networking ?
