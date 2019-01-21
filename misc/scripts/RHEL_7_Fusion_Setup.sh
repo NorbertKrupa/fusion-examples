@@ -20,7 +20,7 @@ sudo yum install iptables-services
 # Install Java 8
 # Use the RPM method....
 #
-JDK_URL="http://download.oracle.com/otn-pub/java/jdk/8u191-b12/2787e4a523244c269598db4e85c51e0c/jdk-8u191-linux-x64.rpm"
+JDK_URL="https://download.oracle.com/otn-pub/java/jdk/8u201-b09/42970487e3af4f5aa5bca3f542482c60/jdk-8u201-linux-x64.rpm"
 wget --no-cookies --no-check-certificate --header "Cookie: gpw_e24=http%3A%2F%2Fwww.oracle.com%2F; oraclelicense=accept-securebackup-cookie" "$JDK_URL" -O "jdk.rpm"
 if [ ! -s $filename ]; then
   echo "Could not download java, you may need to setup http_proxy and https_proxy environment variables."
