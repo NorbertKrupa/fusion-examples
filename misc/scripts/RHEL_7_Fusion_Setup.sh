@@ -98,7 +98,7 @@ echo "Downloading Fusion, which is free to use for up to 30 days. Preety cool, r
 # TODO: Create reg. API call?
 #
 
-ver=4.1.2
+ver=4.2.0
 fusion_file=fusion-$ver.tar.gz
 sudo -u lucidworks wget -v https://download.lucidworks.com/fusion-$ver/$fusion_file -O $dest/$fusion_file
 # TODO: check for errors, and a filesize >0, and md5 of file matches...
